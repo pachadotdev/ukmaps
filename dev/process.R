@@ -53,14 +53,31 @@ classify_country <- function(lad_code) {
 
 # Function to process administrative map
 process_administrative <- function() {
-  file <- "dev/json/administrative/gb/lad.json"
-  cat("Processing administrative boundaries from:", file, "\n")
-  sf_data <- st_read(file, quiet = TRUE)
+  # Process Great Britain (England, Scotland, Wales)
+  gb_file <- "dev/json/administrative/gb/lad.json"
+  cat("Processing GB administrative boundaries from:", gb_file, "\n")
+  gb_data <- st_read(gb_file, quiet = TRUE)
   
-  # Standardize columns - use actual column names from the data
-  sf_data <- sf_data %>%
+  # Standardize GB columns
+  gb_data <- gb_data %>%
     rename(area_code = LAD13CD, area_name = LAD13NM) %>%
-    # Add region and country columns based on LAD code classification
+    select(area_code, area_name, geometry)
+  
+  # Process Northern Ireland  
+  ni_file <- "dev/json/administrative/ni/lgd.json"
+  cat("Processing NI administrative boundaries from:", ni_file, "\n")
+  ni_data <- st_read(ni_file, quiet = TRUE)
+  
+  # Standardize NI columns (LGD = Local Government District)
+  ni_data <- ni_data %>%
+    rename(area_code = LGDCode, area_name = LGDNAME) %>%
+    select(area_code, area_name, geometry)
+  
+  # Combine GB and NI data
+  sf_data <- bind_rows(gb_data, ni_data)
+  
+  # Add region and country columns based on LAD code classification
+  sf_data <- sf_data %>%
     mutate(
       region = classify_region(area_code),
       country = classify_country(area_code)
@@ -132,12 +149,25 @@ get_electoral_files_by_lad <- function() {
 process_electoral_hierarchical <- function() {
   cat("Processing electoral boundaries using LAD-organized files\n")
   
-  # First, get the administrative data to have LAD information
-  admin_data <- st_read("dev/json/administrative/gb/lad.json", quiet = TRUE)
-  lad_lookup <- admin_data %>%
+  # First, get the administrative data to have LAD information for both GB and NI
+  # Great Britain LADs
+  gb_admin_data <- st_read("dev/json/administrative/gb/lad.json", quiet = TRUE)
+  gb_lad_lookup <- gb_admin_data %>%
     select(LAD13CD, LAD13NM) %>%
     st_drop_geometry() %>%
-    mutate(region = classify_region(LAD13CD))
+    rename(area_code = LAD13CD, area_name = LAD13NM) %>%
+    mutate(region = classify_region(area_code))
+  
+  # Northern Ireland LGDs
+  ni_admin_data <- st_read("dev/json/administrative/ni/lgd.json", quiet = TRUE)
+  ni_lad_lookup <- ni_admin_data %>%
+    select(LGDCode, LGDNAME) %>%
+    st_drop_geometry() %>%
+    rename(area_code = LGDCode, area_name = LGDNAME) %>%
+    mutate(region = classify_region(area_code))
+  
+  # Combine GB and NI lookups
+  lad_lookup <- bind_rows(gb_lad_lookup, ni_lad_lookup)
   
   # Get all electoral files organized by LAD
   electoral_files <- get_electoral_files_by_lad()
@@ -156,12 +186,12 @@ process_electoral_hierarchical <- function() {
       lad_code <- str_extract(basename(file_path), "^[^.]+")
       
       # Skip if we can't find this LAD in our lookup
-      if (!lad_code %in% lad_lookup$LAD13CD) {
+      if (!lad_code %in% lad_lookup$area_code) {
         return(NULL)
       }
       
       # Get LAD information
-      lad_info <- lad_lookup[lad_lookup$LAD13CD == lad_code, ]
+      lad_info <- lad_lookup[lad_lookup$area_code == lad_code, ]
       
       tryCatch({
         # Read the electoral data
@@ -171,24 +201,31 @@ process_electoral_hierarchical <- function() {
           return(NULL)
         }
         
-        # Standardize column names based on boundary type
+        # Standardize column names based on boundary type and region
         if (boundary_type == "wpc") {
           electoral_data <- electoral_data %>%
             rename(area_code = PCON13CD, area_name = PCON13NM)
         } else if (boundary_type == "dea") {
           # Northern Ireland District Electoral Areas
           electoral_data <- electoral_data %>%
-            rename(area_code = DEA13CD, area_name = DEA13NM)
+            rename(area_code = DEACODE, area_name = DEANAME)
         } else { # ward
-          electoral_data <- electoral_data %>%
-            rename(area_code = WD13CD, area_name = WD13NM)
+          if (region == "ni") {
+            # Northern Ireland wards have different column names
+            electoral_data <- electoral_data %>%
+              rename(area_code = WARDCODE, area_name = WARDNAME)
+          } else {
+            # Great Britain wards
+            electoral_data <- electoral_data %>%
+              rename(area_code = WD13CD, area_name = WD13NM)
+          }
         }
         
         # Add hierarchical information
         electoral_data <- electoral_data %>%
           mutate(
             lad_code = lad_code,
-            lad_name = lad_info$LAD13NM,
+            lad_name = lad_info$area_name,
             region = lad_info$region,
             boundary_type = boundary_type,
             country = classify_country(lad_code)

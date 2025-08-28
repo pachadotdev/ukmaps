@@ -53,7 +53,7 @@ ggplot(d) +
 Country-level map of the UK:
 
 ``` r
-pal <- c("#165976", "#d04e66", "#ffd613")
+pal <- c("#165976", "#365158", "#d04e66", "#ffd613")
 
 # country() aggregates the map to country level
 ggplot(country()) + 
