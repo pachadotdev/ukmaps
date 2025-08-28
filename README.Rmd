@@ -70,7 +70,7 @@ ggplot(country()) +
 
 Which part of Barnet is Golders Green in?
 
-```{r example, fig.width=15, fig.height=10, warning=FALSE, message=FALSE}
+```{r example3, fig.width=15, fig.height=10, warning=FALSE, message=FALSE}
 d <- electoral %>%
   filter(lad_name == "Barnet" & boundary_type == "ward") %>%
   mutate(is_golders_green = if_else(area_name == "Golders Green", "Yes", "No"))
