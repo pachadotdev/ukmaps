@@ -5,13 +5,17 @@
 \alias{electoral}
 \title{UK Electoral Boundaries}
 \format{
-A data frame with electoral areas and 6 variables:
+A data frame with electoral areas and 8 variables:
 \describe{
-\item{area_code}{Official electoral area code}
+\item{area_code}{Official electoral area code (e.g., E14000703 for WPC, E05000053 for Ward)}
 \item{area_name}{Official area name}
-\item{region}{Region identifier}
-\item{boundary_type}{Type of boundary (electoral)}
-\item{country}{Country identifier (england, scotland, wales, northern_ireland)}
+\item{lad_code}{Parent Local Authority District code (hierarchical link)}
+\item{lad_name}{Parent Local Authority District name}
+\item{region}{Regional classification - London for London areas,
+England for other English areas, Scotland, Wales, Northern Ireland}
+\item{boundary_type}{Type of electoral boundary: wpc (Westminster Parliamentary Constituency),
+ward (Electoral Ward), or dea (District Electoral Area)}
+\item{country}{Country classification: England, Scotland, Wales, Northern Ireland}
 \item{geometry}{Simplified boundary geometries (sf)}
 }
 }
@@ -23,7 +27,14 @@ electoral
 }
 \description{
 Electoral boundaries for the United Kingdom including
-European Electoral Regions (EER), Westminster Parliamentary Constituencies (WPC),
-Electoral Wards, and devolved parliament/assembly constituencies.
+Westminster Parliamentary Constituencies (WPC), Electoral Wards, and
+District Electoral Areas (DEA) for Northern Ireland. Each electoral boundary
+is hierarchically linked to its parent Local Authority District.
+}
+\details{
+The electoral dataset preserves hierarchical relationships where each
+electoral boundary (WPC or Ward) is properly linked to its parent Local Authority
+District through the lad_code field. For example, "Finchley and Golders Green" WPC
+and "Golders Green" Ward both belong to Barnet LAD (E09000003).
 }
 \keyword{datasets}

@@ -13,11 +13,13 @@ knitr::opts_chunk$set(
 )
 ```
 
-# ukmaps
+# ukmaps <img src="man/figures/logo.svg" align="right" height="139" alt="" />
 
 <!-- badges: start -->
 [![BuyMeACoffee](https://raw.githubusercontent.com/pachadotdev/buymeacoffee-badges/main/bmc-yellow.svg)](https://www.buymeacoffee.com/pacha)
 <!-- badges: end -->
+
+*If you need an R package or Shiny dashboard for your team, you can email me or inquiry on [Fiverr](https://www.fiverr.com/sellers/msepulveda3).*
 
 Ukmaps provides simplified maps of the United Kingdom administrative and electoral boundaries. Includes maps for
 England, Scotland, Wales, and Northern Ireland.
@@ -32,31 +34,52 @@ You can install the development version of ukmaps like so:
 remotes::install_github("pachadotdev/ukmaps")
 ```
 
-## Example
+## Examples
+
+Yes/No map of London administrative areas:
 
 ```{r example, fig.width=15, fig.height=10, warning=FALSE, message=FALSE}
 library(ukmaps)
 library(dplyr)
 library(ggplot2)
 
-london_areas <- c(
-  "City of London", "Barking and Dagenham", "Barnet", "Bexley", "Brent", "Bromley",
-  "Camden", "Croydon", "Ealing", "Enfield", "Greenwich", "Hackney", "Hammersmith and Fulham",
-  "Haringey", "Harrow", "Havering", "Hillingdon", "Hounslow", "Islington",
-  "Kensington and Chelsea", "Kingston upon Thames", "Lambeth", "Lewisham", "Merton",
-  "Newham", "Redbridge", "Richmond upon Thames", "Southwark", "Sutton",
-  "Tower Hamlets", "Waltham Forest", "Wandsworth", "Westminster"
-)
-
 d <- administrative %>%
-  filter(country == "England") %>%
-  mutate(is_london = if_else(area_name %in% london_areas, "Yes", "No"))
+  mutate(is_london = if_else(region == "London", "Yes", "No"))
 
 pal <- c("#165976", "#d04e66")
 
 ggplot(d) + 
   geom_sf(aes(fill = is_london, geometry = geometry), color = "white") +
-  scale_fill_manual(values = pal, name = "Is this an administrative area of London?") +
+  scale_fill_manual(values = pal, name = "Is this London?") +
   labs(title = "Map of England with Administrative Boundaries") +
+  theme_minimal(base_size = 13)
+```
+
+Country-level map of the UK:
+
+```{r example2, fig.width=15, fig.height=10, warning=FALSE, message=FALSE}
+pal <- c("#165976", "#d04e66", "#ffd613")
+
+# country() aggregates the map to country level
+ggplot(country()) + 
+  geom_sf(aes(fill = country, geometry = geometry), color = "white") +
+  scale_fill_manual(values = pal, name = "Country") +
+  labs(title = "Map of England with Country Boundaries") +
+  theme_minimal(base_size = 13)
+```
+
+Which part of Barnet is Golders Green in?
+
+```{r example, fig.width=15, fig.height=10, warning=FALSE, message=FALSE}
+d <- electoral %>%
+  filter(lad_name == "Barnet" & boundary_type == "ward") %>%
+  mutate(is_golders_green = if_else(area_name == "Golders Green", "Yes", "No"))
+
+pal <- c("#165976", "#d04e66")
+
+ggplot(d) + 
+  geom_sf(aes(fill = is_golders_green, geometry = geometry), color = "white") +
+  scale_fill_manual(values = pal, name = "Is this Golders Green?") +
+  labs(title = "Map of Barnet (London) with Electoral Boundaries") +
   theme_minimal(base_size = 13)
 ```

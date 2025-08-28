@@ -3,5 +3,7 @@
 .RData
 .Ruserdata
 .Renviron
-data_raw/
-dev/
+dev/json
+dev/Local*
+dev/Westminster*
+dev/*.zip

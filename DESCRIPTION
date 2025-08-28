@@ -1,7 +1,7 @@
 Package: ukmaps
 Type: Package
 Title: Maps of the United Kingdom Administrative Boundaries
-Version: 0.0.1
+Version: 0.0.2
 Authors@R: c(
     person("Mauricio", "Vargas Sepulveda", email = "m.vargas.sepulveda@gmail.com", role = c("aut", "cre")),
     person("Martin", "Chorley", email = "m.vargas.sepulveda@gmail.com", role = c("aut"),

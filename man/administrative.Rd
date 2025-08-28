@@ -5,13 +5,13 @@
 \alias{administrative}
 \title{UK Administrative Boundaries}
 \format{
-A data frame with administrative areas and 6 variables:
+A data frame with administrative areas and 5 variables:
 \describe{
 \item{area_code}{Official government area code (e.g., E06000001, S12000005)}
 \item{area_name}{Official area name}
-\item{region}{Region identifier}
-\item{boundary_type}{Type of boundary (administrative)}
-\item{country}{Country identifier (england, scotland, wales, northern_ireland)}
+\item{region}{Regional classification - London for London boroughs,
+England for other English areas, Scotland, Wales, Northern Ireland}
+\item{country}{Country classification: England, Scotland, Wales, Northern Ireland}
 \item{geometry}{Simplified boundary geometries (sf)}
 }
 }
