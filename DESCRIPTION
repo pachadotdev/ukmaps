@@ -6,7 +6,7 @@ Authors@R: c(
     person("Mauricio", "Vargas Sepulveda", email = "m.vargas.sepulveda@gmail.com", role = c("aut", "cre")),
     person("Martin", "Chorley", email = "m.vargas.sepulveda@gmail.com", role = c("aut"),
       comment = "Original GeoJSON UK repository"),
-    person(family = "The Crown", role = "cph",
+    person(family = "HM Government", role = "cph",
       comment = "Contains Ordnance Survey, Office of National Statistics, National Records Scotland and LPS Intellectual
       Property data.")
   )
