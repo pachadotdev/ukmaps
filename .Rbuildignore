@@ -1,0 +1,13 @@
+^.*\.Rproj$
+^\.Rproj\.user$
+.Renviron
+dev
+docs
+README.Rmd
+README.md
+LICENSE.md
+^codemeta\.json$
+CODE_OF_CONDUCT.md
+^\.github$
+^CODE_OF_CONDUCT\.md$
+^README\.Rmd$
