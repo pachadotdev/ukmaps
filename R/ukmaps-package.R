@@ -1,7 +1,9 @@
 #' UK Boundaries - Ward-level Hierarchical Dataset
 #'
 #' @description
-#' Complete UK territorial boundaries dataset at the electoral ward level, with each ward linked to its Westminster Parliamentary Constituency (WPC), Local Authority District (LAD), County/Unitary Authority, and country. All boundaries are provided as simplified MULTIPOLYGON geometries.
+#' Complete UK territorial boundaries dataset at the electoral ward level, with each Ward linked to its
+#' Local Authority District (LAD), County/Unitary Authority, and country. All boundaries are provided as simplified
+#' MULTIPOLYGON geometries.
 #'
 #' @format A tibble (sf object) with 8,396 rows and 11 columns:
 #' \describe{
@@ -27,3 +29,32 @@
 #' @docType data
 #' @name boundaries
 "boundaries"
+
+#' UK Local Authority Districts Election Results (England and Wales)
+#'
+#' @description
+#' Local election results for England and Wales local authority districts, covering elections from 2021 to May 2025.
+#' Each row represents a district-year result, including top and next party, vote shares, and notes.
+#'
+#' @format A tibble with 346 rows and 9 columns:
+#' \describe{
+#'   \item{election_year}{Year of the election}
+#'   \item{lad_name}{Local authority district name}
+#'   \item{county_name}{County or unitary authority name}
+#'   \item{country_name}{Country (England or Wales)}
+#'   \item{top_party}{Party with the highest vote share}
+#'   \item{top_party_pct}{Vote percentage for top party}
+#'   \item{next_party}{Second party by vote share}
+#'   \item{next_party_pct}{Vote percentage for next party}
+#'   \item{notes}{Relative position details based on results (if any)}
+#' }
+#'
+#' @details
+#' Data compiled from UK local authority election results. Covers all districts in England and Wales for the years
+#' 2021–2025. Vote shares are percentages. Notes include relative position details based on results.
+#'
+#' @source Dr. Catherine Moez (https://github.com/catmoez/UK-Local-Authority-districts/tree/main)
+#'
+#' @docType data
+#' @name election_results
+"election_results"

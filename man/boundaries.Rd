@@ -27,7 +27,9 @@ Open Geograpy Portal (Office for National Statistics)
 boundaries
 }
 \description{
-Complete UK territorial boundaries dataset at the electoral ward level, with each ward linked to its Westminster Parliamentary Constituency (WPC), Local Authority District (LAD), County/Unitary Authority, and country. All boundaries are provided as simplified MULTIPOLYGON geometries.
+Complete UK territorial boundaries dataset at the electoral ward level, with each Ward linked to its
+Local Authority District (LAD), County/Unitary Authority, and country. All boundaries are provided as simplified
+MULTIPOLYGON geometries.
 }
 \details{
 Each row represents a single UK electoral ward, with hierarchical links to its Local Authority District,

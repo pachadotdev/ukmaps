@@ -136,3 +136,52 @@ ggplot(d) +
   labs(title = "How many R's in each LAD name?") +
   theme_minimal(base_size = 13)
 ```
+
+Now an example with real data for the election results (thanks to Dr. Catherine Moez for sharing the data):
+
+```{r example8, fig.width=15, fig.height=10, warning=FALSE, message=FALSE}
+library(sf)
+library(tintin)
+
+# filter the map to England and Wales, and aggregate to LAD level
+# similar to the lads() function for the UK
+d <- boundaries %>%
+  filter(country_name %in% c("England", "Wales")) %>%
+  group_by(lad_code, lad_name) %>%
+  summarise(geometry = st_union(geometry), .groups = "drop")
+
+# Add the election results to the map
+d <- d %>%
+  left_join(election_results) %>%
+  group_by(lad_name) %>%
+  filter(election_year == max(election_year, na.rm = TRUE)) %>%
+  ungroup()
+
+# Expand LADs to all years, so all polygons appear in every year
+all_years <- sort(unique(election_results$election_year))
+all_lads <- d %>% select(lad_code, lad_name, geometry)
+
+d <- tidyr::expand_grid(all_lads, election_year = all_years) %>%
+    left_join(election_results, by = c("lad_name", "election_year"))
+
+ggplot(d) + 
+  geom_sf(aes(fill = top_party, geometry = geometry), color = "white") +
+  # scale_fill_discrete(name = "Top Party") +
+  scale_fill_manual(values = tintin_clrs(
+      n = length(unique(d$top_party)),
+      option = "cigars of the pharaoh"),
+    na.value = "gray80",
+    name = "Top Party") +
+  labs(title = "UK Local Authority Districts - Top Party by Year",
+    subtitle = "Data: Dr. Catherine Moez") +
+  facet_wrap(~ election_year) +
+  theme_minimal(base_size = 13) +
+  theme(
+    axis.text = element_blank(),
+    axis.ticks = element_blank(),
+    panel.grid = element_blank(),
+    panel.background = element_rect(color = "black", fill = NA, linewidth = 2),
+    strip.background = element_rect(fill = "#012169", color = "black"),
+    strip.text = element_text(face = "bold", color = "white")
+  )
+```
