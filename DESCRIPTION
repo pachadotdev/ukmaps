@@ -1,14 +1,12 @@
 Package: ukmaps
 Type: Package
 Title: Maps of the United Kingdom Administrative Boundaries
-Version: 0.0.2
+Version: 0.0.4
 Authors@R: c(
     person("Mauricio", "Vargas Sepulveda", email = "m.vargas.sepulveda@gmail.com", role = c("aut", "cre")),
-    person("Martin", "Chorley", email = "m.vargas.sepulveda@gmail.com", role = c("aut"),
-      comment = "Original GeoJSON UK repository"),
+    person("Catherine", "Moez", role = "aut"),
     person(family = "HM Government", role = "cph",
-      comment = "Contains Ordnance Survey, Office of National Statistics, National Records Scotland and LPS Intellectual
-      Property data.")
+      comment = "Uses datasets from the Office of National Statistics.")
   )
 URL: https://pacha.dev/ukmaps/
 BugReports: https://github.com/pachadotdev/ukmaps/issues/
@@ -17,6 +15,7 @@ Description: Provides simplified maps of the United Kingdom administrative and e
 License: Apache License (>= 2)
 Encoding: UTF-8
 LazyData: true
+LazyDataCompression: xz
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
 Depends: 
@@ -24,7 +23,6 @@ Depends:
 Imports:
     sf,
     dplyr,
-    rmapshaper,
     magrittr,
     rlang
 Suggests:

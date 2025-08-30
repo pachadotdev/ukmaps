@@ -1,53 +1,29 @@
-#' UK Administrative Boundaries
-#' 
-#' @description Administrative boundaries for the United Kingdom including
-#' Local Authority Districts (LAD) for England, Scotland, and Wales, and
-#' Local Government Districts (LGD) for Northern Ireland.
-#' 
-#' @format A data frame with administrative areas and 5 variables:
+#' UK Boundaries - Ward-level Hierarchical Dataset
+#'
+#' @description
+#' Complete UK territorial boundaries dataset at the electoral ward level, with each ward linked to its Westminster Parliamentary Constituency (WPC), Local Authority District (LAD), County/Unitary Authority, and country. All boundaries are provided as simplified MULTIPOLYGON geometries.
+#'
+#' @format A tibble (sf object) with 8,396 rows and 11 columns:
 #' \describe{
-#'   \item{area_code}{Official government area code (e.g., E06000001, S12000005)}
-#'   \item{area_name}{Official area name}
-#'   \item{region}{Regional classification - London for London boroughs, 
-#'                 England for other English areas, Scotland, Wales, Northern Ireland}
-#'   \item{country}{Country classification: England, Scotland, Wales, Northern Ireland}
-#'   \item{geometry}{Simplified boundary geometries (sf)}
+#'   \item{ward_code}{Official ward code (e.g., E05000932)}
+#'   \item{ward_name}{Ward name (e.g., Ainsdale)}
+#'   \item{lad_code}{Local Authority District code (e.g., E08000014)}
+#'   \item{lad_name}{Local Authority District name (e.g., Sefton)}
+#'   \item{county_code}{County/Unitary Authority code (e.g., E10000017)}
+#'   \item{county_name}{County/Unitary Authority name (e.g., Lancashire)}
+#'   \item{country_code}{Country code (ENG, SCT, WLS, NIR)}
+#'   \item{region_code}{Region code (e.g., E12000001)}
+#'   \item{region_name}{Region name (e.g., North East)}
+#'   \item{country}{Country name (England, Scotland, Wales, Northern Ireland)}
+#'   \item{geometry}{Ward boundary geometry (MULTIPOLYGON, sf)}
 #' }
-#' 
-#' @source Office for National Statistics, National Records of Scotland, NISRA
-#' 
+#'
+#' @details
+#' Each row represents a single UK electoral ward, with hierarchical links to its Local Authority District,
+#' County/Unitary Authority, region, and country. Only England has non-blank values for the region columns,
+#'
+#' @source Open Geograpy Portal (Office for National Statistics)
+#'
 #' @docType data
-#' @name administrative
-"administrative"
-
-#' UK Electoral Boundaries
-#' 
-#' @description Electoral boundaries for the United Kingdom including
-#' Westminster Parliamentary Constituencies (WPC), Electoral Wards, and
-#' District Electoral Areas (DEA) for Northern Ireland. Each electoral boundary
-#' is hierarchically linked to its parent Local Authority District.
-#' 
-#' @format A data frame with electoral areas and 8 variables:
-#' \describe{
-#'   \item{area_code}{Official electoral area code (e.g., E14000703 for WPC, E05000053 for Ward)}
-#'   \item{area_name}{Official area name}
-#'   \item{lad_code}{Parent Local Authority District code (hierarchical link)}
-#'   \item{lad_name}{Parent Local Authority District name}
-#'   \item{region}{Regional classification - London for London areas, 
-#'                 England for other English areas, Scotland, Wales, Northern Ireland}
-#'   \item{boundary_type}{Type of electoral boundary: wpc (Westminster Parliamentary Constituency), 
-#'                        ward (Electoral Ward), or dea (District Electoral Area)}
-#'   \item{country}{Country classification: England, Scotland, Wales, Northern Ireland}
-#'   \item{geometry}{Simplified boundary geometries (sf)}
-#' }
-#' 
-#' @details The electoral dataset preserves hierarchical relationships where each
-#' electoral boundary (WPC or Ward) is properly linked to its parent Local Authority
-#' District through the lad_code field. For example, "Finchley and Golders Green" WPC
-#' and "Golders Green" Ward both belong to Barnet LAD (E09000003).
-#' 
-#' @source Office for National Statistics, Electoral Commission
-#' 
-#' @docType data
-#' @name electoral
-"electoral"
+#' @name boundaries
+"boundaries"

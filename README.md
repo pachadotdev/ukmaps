@@ -36,13 +36,16 @@ library(ukmaps)
 library(dplyr)
 library(ggplot2)
 
-d <- administrative %>%
-  mutate(is_london = if_else(region == "London", "Yes", "No"))
+d <- boundaries %>%
+  mutate(
+    region_name = if_else(is.na(region_name), "Notr Available", region_name),
+    is_london = if_else(region_name == "London", "Yes", "No")
+  )
 
 pal <- c("#165976", "#d04e66")
 
 ggplot(d) + 
-  geom_sf(aes(fill = is_london, geometry = geometry), color = "white") +
+  geom_sf(aes(fill = is_london, geometry = geometry), color = "white", linewidth = 0) +
   scale_fill_manual(values = pal, name = "Is this London?") +
   labs(title = "Map of England with Administrative Boundaries") +
   theme_minimal(base_size = 13)
@@ -50,35 +53,93 @@ ggplot(d) +
 
 <img src="man/figures/README-example-1.png" width="100%" />
 
-Country-level map of the UK:
+Which part of London is Barnet?
 
 ``` r
-pal <- c("#165976", "#365158", "#d04e66", "#ffd613")
+d <- boundaries %>%
+  filter(region_name == "London") %>%
+  mutate(is_barnet = if_else(lad_name == "Barnet", "Yes", "No"))
 
-# country() aggregates the map to country level
-ggplot(country()) + 
-  geom_sf(aes(fill = country, geometry = geometry), color = "white") +
-  scale_fill_manual(values = pal, name = "Country") +
-  labs(title = "Map of England with Country Boundaries") +
+pal <- c("#165976", "#d04e66")
+
+ggplot(d) + 
+  geom_sf(aes(fill = is_barnet, geometry = geometry), color = "white") +
+  scale_fill_manual(values = pal, name = "Is this Barnet?") +
+  labs(title = "Which part of London is Barnet?") +
   theme_minimal(base_size = 13)
 ```
 
-<img src="man/figures/README-example2-1.png" width="100%" />
+<img src="man/figures/README-example3-1.png" width="100%" />
 
-Which part of Barnet is Golders Green in?
+Which part of London is Golders Green?
 
 ``` r
-d <- electoral %>%
-  filter(lad_name == "Barnet" & boundary_type == "ward") %>%
-  mutate(is_golders_green = if_else(area_name == "Golders Green", "Yes", "No"))
+d <- boundaries %>%
+  filter(region_name == "London") %>%
+  mutate(
+    is_golders_green = if_else(ward_name == "Golders Green", "Yes", "No")
+  )
 
 pal <- c("#165976", "#d04e66")
 
 ggplot(d) + 
   geom_sf(aes(fill = is_golders_green, geometry = geometry), color = "white") +
   scale_fill_manual(values = pal, name = "Is this Golders Green?") +
-  labs(title = "Map of Barnet (London) with Electoral Boundaries") +
+  labs(title = "Which part of London is Golders Green?") +
   theme_minimal(base_size = 13)
 ```
 
-<img src="man/figures/README-example3-1.png" width="100%" />
+<img src="man/figures/README-example4-1.png" width="100%" />
+
+The following maps use functions that aggregate the dataset to keep the
+package size small.
+
+Country level map of the UK:
+
+``` r
+pal <- c("#165976", "#365158", "#d04e66", "#ffd613")
+
+# country() aggregates the map to country level
+ggplot(country()) + 
+  geom_sf(aes(fill = country_name, geometry = geometry), color = "white") +
+  scale_fill_manual(values = pal, name = "Country") +
+  labs(title = "Map of England with Country Boundaries") +
+  theme_minimal(base_size = 13)
+```
+
+<img src="man/figures/README-example5-1.png" width="100%" />
+
+How many R’s in each county name?
+
+``` r
+# number of R's in county names
+d <- counties() %>%
+  mutate(n = stringr::str_count(county_name, "[rR]"))
+
+# region() aggregates the map to country level
+ggplot(d) + 
+  geom_sf(aes(fill = n, geometry = geometry), color = "white") +
+  scale_fill_gradient(low = "#165976", high = "#d04e66", name = "R's",
+                      breaks = seq(0, max(d$n), by = 1)) +
+  labs(title = "How many R's in each county name?") +
+  theme_minimal(base_size = 13)
+```
+
+<img src="man/figures/README-example6-1.png" width="100%" />
+
+How many R’s in each LAD name? Local Authority Districts (LAD) (Local
+Government District (LGD) in Northern Ireland)
+
+``` r
+d <- lads() %>%
+  mutate(n = stringr::str_count(lad_name, "[rR]"))
+
+ggplot(d) + 
+  geom_sf(aes(fill = n, geometry = geometry), color = "white") +
+  scale_fill_gradient(low = "#165976", high = "#d04e66", name = "R's",
+                      breaks = seq(0, max(d$n), by = 1)) +
+  labs(title = "How many R's in each LAD name?") +
+  theme_minimal(base_size = 13)
+```
+
+<img src="man/figures/README-example7-1.png" width="100%" />

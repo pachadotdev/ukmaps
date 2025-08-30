@@ -6,11 +6,8 @@
 \usage{
 country()
 }
-\value{
-A tibble with multipolygon geometry for each country.
-}
 \description{
-Dissolves administrative boundaries to country level.
+Merges boundaries to country level from the unified dataset.
 }
 \examples{
 country()

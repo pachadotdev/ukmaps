@@ -11,3 +11,4 @@ CODE_OF_CONDUCT.md
 ^\.github$
 ^CODE_OF_CONDUCT\.md$
 ^README\.Rmd$
+^README\.html$
